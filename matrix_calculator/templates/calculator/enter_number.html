@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2> Dimensions: {{ n_rows }}x{{ m_columns }} </h2>
+
+<form action="/calculated/" method="POST">
+    {% csrf_token %}
+    <table border=1 style="border: 1px solid black;">
+        {% for i in rows %}
+        <tr>
+            {% for j in columns %}
+            <td><input max="1000000000" min="-1000000000" name="{{ i }}{{ j }}" type="number"></td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% if form %}
+    {{ form.as_p }}
+    <p><input type="submit" value="Operate"></p>
+    <p>Empty fields will be interpreted as 0.</p>
+    {% endif %}
+
+
+    {% if result %}
+    {% if 'list' in result_type %}
+    <table border=1 style="border: 1px solid black;">
+        {% for res in result %}
+        <tr>
+            {% for r in res %}
+            <td>{{ r }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <h2> Matrix {{ operation }} is {{ result }}. </h2>
+    {% endif %}
+    {% endif %}
+    {% if messages %}
+
+    <ul class="messages">
+
+        {% for message in messages %}
+        <li> {{ message }}</li>
+        {% endfor %}
+
+    </ul>
+
+    {% endif %}
+</form>
+{% endblock content %}
